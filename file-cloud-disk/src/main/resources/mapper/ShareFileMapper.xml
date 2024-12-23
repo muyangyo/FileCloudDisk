@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.muyangyo.fileclouddisk.user.mapper.ShareFileMapper">
+    <sql id="allColumns">
+        code, file_path, create_time, creator, status
+    </sql>
+
+    <!-- 根据主键查询 -->
+    <select id="selectByCode" resultType="com.muyangyo.fileclouddisk.common.model.meta.ShareFile">
+        SELECT
+        <include refid="allColumns"/>
+        FROM shareFile
+        WHERE code = #{code}
+    </select>
+
+    <!-- 动态多条件查询 -->
+    <select id="selectByDynamicCondition" resultType="com.muyangyo.fileclouddisk.common.model.meta.ShareFile">
+        SELECT
+        <include refid="allColumns"/>
+        FROM shareFile
+        <where>
+            <if test="code != null">
+                AND code = #{code}
+            </if>
+            <if test="filePath != null">
+                AND file_path = #{filePath}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="creator != null">
+                AND creator = #{creator}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="selectByDynamicConditionAndLimit" resultType="com.muyangyo.fileclouddisk.common.model.meta.ShareFile">
+        SELECT
+        <include refid="allColumns"/>
+        FROM shareFile
+        <where>
+            <if test="shareFile.code != null">
+                AND code = #{shareFile.code}
+            </if>
+            <if test="shareFile.filePath != null">
+                AND file_path = #{shareFile.filePath}
+            </if>
+            <if test="shareFile.createTime != null">
+                AND create_time = #{shareFile.createTime}
+            </if>
+            <if test="shareFile.creator != null">
+                AND creator = #{shareFile.creator}
+            </if>
+            <if test="shareFile.status != null">
+                AND status = #{shareFile.status}
+            </if>
+        </where>
+        ORDER BY create_time DESC LIMIT #{start}, #{size}
+    </select>
+
+    <select id="getShareFileCount" resultType="java.lang.Integer">
+        select count(1) from shareFile where creator = #{creator};
+    </select>
+    <select id="selectAll" resultType="com.muyangyo.fileclouddisk.common.model.meta.ShareFile">
+        SELECT
+        <include refid="allColumns"/>
+        FROM shareFile
+        ORDER BY create_time DESC
+    </select>
+
+
+    <!-- 动态插入数据，如果数据为空则使用默认值 -->
+    <insert id="insertByDynamicCondition">
+        INSERT INTO shareFile
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="code != null">code,</if>
+            <if test="filePath != null">file_path,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="creator != null">creator,</if>
+            <if test="status != null">status,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="code != null">#{code},</if>
+            <if test="filePath != null">#{filePath},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="creator != null">#{creator},</if>
+            <if test="status != null">#{status},</if>
+        </trim>
+    </insert>
+
+    <!-- 动态更新数据 -->
+    <update id="update">
+        UPDATE shareFile
+        <set>
+            <if test="filePath != null">
+                file_path = #{filePath},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="creator != null">
+                creator = #{creator},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+        </set>
+        WHERE code = #{code}
+    </update>
+
+    <!-- 删除数据 -->
+    <delete id="deleteByCode">
+        DELETE
+        FROM shareFile
+        WHERE code = #{code}
+    </delete>
+
+    <!-- 删除数据 -->
+    <delete id="deleteExpiredShareFileByCreator">
+        DELETE
+        FROM shareFile
+        WHERE creator = #{creator}
+        AND status = 0
+    </delete>
+
+    <!-- 删除数据 -->
+    <delete id="deleteAllByCreator">
+        DELETE
+        FROM shareFile
+        WHERE creator = #{creator}
+    </delete>
+
+</mapper>

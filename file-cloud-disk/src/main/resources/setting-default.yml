@@ -1,0 +1,20 @@
+server:
+  port: 80 # 服务器端口
+invitationCode: "123456" # 创建新管理用户时需要输入的邀请码
+
+maxNumberOfAttempts: 16 # 登录或注册失败最大尝试次数(5分钟内),不推荐修改 默认16次
+
+token:
+  lifeTime: 3600 # token有效期,单位秒 默认1小时
+  signature: "${sign}" # token签名密钥
+
+securityOptions:
+  userComponent: true # 登入注册加密
+  localOperationOnly: true # 管理端操作是否只能在本地 127.0.0.1 访问 (true:只能本地访问,false:可以远程访问)
+
+Cache: # 每次启动时会清空缓存(请放心使用)
+  videoCacheSize: 10 # 视频缓存个数(LRU算法)
+  downloadFileCacheSize: 5 # 下载文件缓存个数(LRU算法)
+  downloadFileCacheExpireTime: 30 # 下载文件缓存过期时间(分钟)
+  # 分享文件最大存活时间(分钟),虽然过期会自动清理,但是只有在用户还活跃的情况下清理(懒人模式),所以建议设置一个比较长的时间
+  MaximumSurvivalTimeOfSharedFile: 10080 # 1周
