@@ -32,13 +32,13 @@ logging:
   # 日志分类打印等级
   level:
     root: info
-#    com.muyangyo.fileclouddisk.user.controller: trace
-#    com.muyangyo.fileclouddisk.user.service: trace
-#    com.muyangyo.fileclouddisk.user.mapper: info
-#    com.muyangyo.fileclouddisk.common: trace
-#    com.muyangyo.fileclouddisk.manager.controller: trace
-#    com.muyangyo.fileclouddisk.manager.service: trace
-#    com.muyangyo.fileclouddisk.manager.mapper: info
+  #    com.muyangyo.fileclouddisk.user.controller: trace
+  #    com.muyangyo.fileclouddisk.user.service: trace
+  #    com.muyangyo.fileclouddisk.user.mapper: info
+  #    com.muyangyo.fileclouddisk.common: trace
+  #    com.muyangyo.fileclouddisk.manager.controller: trace
+  #    com.muyangyo.fileclouddisk.manager.service: trace
+  #    com.muyangyo.fileclouddisk.manager.mapper: info
 
   # 日志持久化存储文件
   file:
