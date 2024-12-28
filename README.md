@@ -6,8 +6,6 @@
 
 **视频教程**：[仿写CHFS的个人文件云盘v1.1](https://www.bilibili.com/video/BV1yLCbYqEZU/?share_source=copy_web&vd_source=de558515d68c4ec5833433070f1efa89)
 
-<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=113729425380768&bvid=BV1yLCbYqEZU&cid=27574141901&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
-
 ## 自行打包说明
 
 ### 1. 下载项目代码
