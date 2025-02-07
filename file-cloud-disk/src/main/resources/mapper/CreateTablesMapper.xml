@@ -56,6 +56,15 @@
         );
     </update>
 
+    <update id="createRecycleBinTable">
+        CREATE TABLE recycleBinTable (
+        id VARCHAR(4) PRIMARY KEY,
+        file_name VARCHAR(255) NOT NULL,
+        file_original_path VARCHAR(255) NOT NULL,
+        delete_time DATETIME
+        );
+    </update>
+
     <!--    <update id="BlackListIPTable">-->
     <!--        CREATE TABLE blacklisted_ip (-->
     <!--        ip VARCHAR(30) PRIMARY KEY,-->

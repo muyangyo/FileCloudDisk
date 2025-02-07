@@ -1,8 +1,10 @@
 server:
   port: 80 # 服务器端口
-invitationCode: "123456" # 创建新管理用户时需要输入的邀请码
 
+dev: false # 是否开发模式
+invitationCode: "123456" # 创建新管理用户时需要输入的邀请码
 maxNumberOfAttempts: 16 # 登录或注册失败最大尝试次数(5分钟内),不推荐修改 默认16次
+recycleBin: true # 是否开启回收站功能(默认开启)
 
 token:
   lifeTime: 3600 # token有效期,单位秒 默认1小时

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.muyangyo.fileclouddisk.user.mapper.RecycleBinFileMapper">
+    <sql id="allColumns">
+        id, file_name, file_original_path, delete_time
+    </sql>
+
+    <!-- 根据主键查询 -->
+    <select id="selectByCode" resultType="com.muyangyo.fileclouddisk.common.model.meta.RecycleBinFile">
+        SELECT
+        <include refid="allColumns"/>
+        FROM recycleBinTable
+        WHERE id = #{id}
+    </select>
+
+    <!-- 动态多条件查询 -->
+    <select id="selectByDynamicCondition" resultType="com.muyangyo.fileclouddisk.common.model.meta.RecycleBinFile">
+        SELECT
+        <include refid="allColumns"/>
+        FROM recycleBinTable
+        <where>
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="fileName != null">
+                AND file_name = #{fileName}
+            </if>
+            <if test="fileOriginalPath != null">
+                AND file_original_path = #{fileOriginalPath}
+            </if>
+            <if test="deleteTime != null">
+                AND delete_time = #{deleteTime}
+            </if>
+        </where>
+        ORDER BY delete_time ASC
+    </select>
+
+    <!-- 查询全部 -->
+    <select id="selectAll" resultType="com.muyangyo.fileclouddisk.common.model.meta.RecycleBinFile">
+        SELECT
+        <include refid="allColumns"/>
+        FROM recycleBinTable
+        ORDER BY delete_time ASC
+    </select>
+
+    <!-- 动态插入数据，如果数据为空则使用默认值 -->
+    <insert id="insertByDynamicCondition">
+        INSERT INTO recycleBinTable
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="fileName != null">file_name,</if>
+            <if test="fileOriginalPath != null">file_original_path,</if>
+            <if test="deleteTime != null">delete_time,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="fileName != null">#{fileName},</if>
+            <if test="fileOriginalPath != null">#{fileOriginalPath},</if>
+            <if test="deleteTime != null">#{deleteTime},</if>
+        </trim>
+    </insert>
+
+
+    <!-- 删除数据 -->
+    <delete id="deleteByCode">
+        DELETE
+        FROM recycleBinTable
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 删除数据 -->
+    <delete id="deleteAll">
+        DELETE
+        FROM recycleBinTable
+    </delete>
+</mapper>

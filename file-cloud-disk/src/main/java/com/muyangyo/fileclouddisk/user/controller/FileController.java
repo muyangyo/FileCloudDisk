@@ -187,7 +187,7 @@ public class FileController {
             request.setAttribute(FileBinHandler.ATTR_FILE, FileUtils.getAbsolutePath(file));
             fileBinHandler.handleRequest(request, response);
         } catch (IOException e) {
-            if (e.getMessage().contains("远程主机强迫关闭了一个现有的连接") || e.getMessage().contains("你的主机中的软件中止了一个已建立的连接")) {
+            if (e.getMessage().contains("远程主机强迫关闭了一个现有的连接") || e.getMessage().contains("你的主机中的软件中止了一个已建立的连接") || e.getMessage().contains("Broken pipe")) {
                 log.warn("由于视频拖动导致客户端强迫关闭了一个现有的连接 {}", e.getMessage());
             } else {
                 log.error("预览视频过程中出现异常", e);
@@ -349,14 +349,65 @@ public class FileController {
 
         fileService.checkFollowRootPathAndGetFileInfo(file);// 检查文件是否合理
 
-
-        if (FileUtils.delete(file)) {
-            operationLogService.addLogFromRequest("删除文件", OperationLevel.IMPORTANT, request);
-            return Result.success("文件删除成功");
+        // 判断是否开启回收站功能
+        if (setting.isUseRecycleBin()) {
+            // 移动到回收站
+            if (fileService.moveToRecycleBin(file)) {
+                operationLogService.addLogFromRequest("移动文件 [" + FileUtils.getFileName(file) + "] 至回收站", OperationLevel.WARNING, request);
+                return Result.success("文件已移至回收站");
+            } else {
+                return Result.error("文件移至回收站失败");
+            }
         } else {
-            return Result.error("文件删除失败");
+            // 直接删除文件
+            if (FileUtils.delete(file)) {
+                operationLogService.addLogFromRequest("删除文件 [" + FileUtils.getFileName(file) + "]", OperationLevel.IMPORTANT, request);
+                return Result.success("文件删除成功");
+            } else {
+                return Result.error("文件删除失败");
+            }
         }
     }
+
+    @UserOperationLimit("r")
+    @GetMapping("/getRecycleBinList")
+    public Result getRecycleBinList(HttpServletRequest request) {
+        if (setting.isUseRecycleBin()) {
+            // 开启回收站功能了才有返回
+            operationLogService.addLogFromRequest("获取回收站列表", OperationLevel.INFO, request);
+            return Result.success(fileService.getRecycleBinList());
+        } else {
+            return Result.fail("未开启回收站功能");
+        }
+    }
+
+    @UserOperationLimit("d")
+    @DeleteMapping("/deleteRecycleBinFile")
+    public Result deleteRecycleBin(@RequestParam(required = false) String id, @RequestParam boolean isDeleteAll, HttpServletRequest request) {
+        if (setting.isUseRecycleBin()) {
+            if (isDeleteAll) {
+                // 全部删除
+                operationLogService.addLogFromRequest("清空回收站", OperationLevel.IMPORTANT, request);
+                return fileService.deleteAllFromRecycleBin() ? Result.success("全部删除成功") : Result.error("全部删除失败");
+            } else {
+                // 单个删除
+                return fileService.deleteFromRecycleBinByFid(id, request) ? Result.success("删除成功") : Result.error("删除失败");
+            }
+        } else {
+            return Result.fail("未开启回收站功能");
+        }
+    }
+
+    @UserOperationLimit("w")
+    @PutMapping("/restoreRecycleBinFile")
+    public Result restoreRecycleBin(@RequestParam String id, HttpServletRequest request) {
+        if (setting.isUseRecycleBin()) {
+            return fileService.restoreFromRecycleBin(id, request) ? Result.success("还原成功") : Result.error("还原失败");
+        } else {
+            return Result.fail("未开启回收站功能");
+        }
+    }
+
 
     @UserOperationLimit("w")
     @PostMapping("/createShareFile") // 创建分享文件(使用的绝对路径)
