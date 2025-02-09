@@ -4,15 +4,16 @@
       <div style="text-align: center; margin-bottom: 20px; font-size: 36px; font-weight: bold;">
         Login
       </div>
-      <el-form :model="form" :rules="rules" ref="loginForm" label-width="80px">
+      <el-form :model="form" :rules="rules" ref="loginForm" label-width="80px" @submit.native.prevent="submitForm">
         <el-form-item label="账号" prop="username">
-          <el-input v-model="form.username" placeholder="请输入账号"></el-input>
+          <el-input v-model="form.username" placeholder="请输入账号" @change="form.username = form.username.trim()"/>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input type="password" v-model="form.password" placeholder="请输入密码"></el-input>
+          <el-input type="password" v-model="form.password" placeholder="请输入密码"
+                    @change="form.password = form.password.trim()"/>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm">登录</el-button>
+          <el-button type="primary" native-type="submit">登录</el-button>
           <el-button @click="resetForm">重置</el-button>
         </el-form-item>
       </el-form>
