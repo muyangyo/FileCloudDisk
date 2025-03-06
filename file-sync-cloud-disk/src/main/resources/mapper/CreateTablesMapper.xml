@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.muyangyo.filesyncclouddisk.common.mapper.CreateTablesMapper">
+
+    <update id="createMountDirsTable">
+        CREATE TABLE mountDirs (
+        mountDir TEXT
+        );
+    </update>
+
+
+    <update id="createAdminTable">
+        CREATE TABLE admin (
+        user_id VARCHAR(10) PRIMARY KEY,
+        username VARCHAR(30) UNIQUE,
+        password VARCHAR(64),
+        create_time DATETIME,
+        last_login_time DATETIME
+        );
+    </update>
+
+    <update id="createUserTable">
+        CREATE TABLE user (
+        user_id VARCHAR(10) PRIMARY KEY,
+        username VARCHAR(30) UNIQUE,
+        password VARCHAR(64),
+        create_time DATETIME,
+        last_login_time DATETIME,
+        account_status TINYINT(1),
+        permissions VARCHAR(4)
+        );
+    </update>
+
+    <update id="createShareFileTable">
+        CREATE TABLE shareFile
+        (
+        "code" VARCHAR(10) NOT NULL,
+        "file_path" VARCHAR(255) NOT NULL,
+        "creator" VARCHAR(30) NOT NULL,
+        "create_time" DATETIME NOT NULL,
+        "status" TINYINT(1) NOT NULL,
+        PRIMARY KEY ("code")
+        );
+    </update>
+
+    <update id="createOperationLogTable">
+        CREATE TABLE cloudDiskOperationLog (
+        operation_time DATETIME NOT NULL,
+        operation VARCHAR(255) NOT NULL,
+        user_name VARCHAR(255),
+        user_ip VARCHAR(100),
+        operation_level VARCHAR(15) NOT NULL
+        );
+    </update>
+
+    <update id="createRecycleBinTable">
+        CREATE TABLE recycleBinTable (
+        id VARCHAR(4) PRIMARY KEY,
+        file_name VARCHAR(255) NOT NULL,
+        file_original_path VARCHAR(255) NOT NULL,
+        delete_time DATETIME
+        );
+    </update>
+
+    <update id="createSyncInfoTable">
+        CREATE TABLE IF NOT EXISTS syncInfo (
+        username TEXT PRIMARY KEY,
+        password TEXT NOT NULL,
+        local_address TEXT UNIQUE NOT NULL,
+        is_first BOOLEAN DEFAULT FALSE, -- 这个及以下都是客户端才有的
+        server_id TEXT,
+        server_ip TEXT,
+        is_active BOOLEAN DEFAULT TRUE,
+        last_sync_time DATETIME
+        );
+    </update>
+
+    <update id="createSyncOperationLogTable">
+        CREATE TABLE IF NOT EXISTS syncOperationLog (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        operation_time DATETIME NOT NULL,
+        operation VARCHAR(50) NOT NULL,
+        target_file TEXT,
+        operator VARCHAR(50) NOT NULL,
+        ip VARCHAR(15) NOT NULL,
+        level VARCHAR(10) NOT NULL
+        );
+    </update>
+
+    <!--    <update id="BlackListIPTable">-->
+    <!--        CREATE TABLE blacklisted_ip (-->
+    <!--        ip VARCHAR(30) PRIMARY KEY,-->
+    <!--        create_time DATETIME,-->
+    <!--        );-->
+    <!--    </update>-->
+</mapper>

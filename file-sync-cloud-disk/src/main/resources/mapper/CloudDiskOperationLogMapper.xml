@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.muyangyo.filesyncclouddisk.manager.mapper.CloudDiskOperationLogMapper">
+
+    <sql id="allColumns">
+        operation_time, operation, user_name, user_ip, operation_level
+    </sql>
+
+    <!-- 动态多条件查询 -->
+    <select id="selectByConditions" resultType="com.muyangyo.filesyncclouddisk.common.model.meta.CloudDiskOperationLog">
+        SELECT
+        <include refid="allColumns"/>
+        FROM cloudDiskOperationLog
+        <where>
+            <if test="operationTime != null">
+                AND operation_time = #{operationTime}
+            </if>
+            <if test="operation != null">
+                AND operation = #{operation}
+            </if>
+            <if test="userName != null">
+                AND user_name = #{userName}
+            </if>
+            <if test="userIp != null">
+                AND user_ip = #{userIp}
+            </if>
+            <if test="operationLevel != null">
+                AND operation_level = #{operationLevel}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询所有数据，分页 -->
+    <select id="selectAllWithLimit" resultType="com.muyangyo.filesyncclouddisk.common.model.meta.CloudDiskOperationLog">
+        SELECT
+        <include refid="allColumns"/>
+        FROM cloudDiskOperationLog
+        ORDER BY operation_time DESC LIMIT #{start}, #{size}
+    </select>
+    <!-- 查询总数 -->
+    <select id="getTotalCount" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM cloudDiskOperationLog
+    </select>
+
+    <!-- 插入操作日志-->
+    <insert id="insertOperationLog">
+        INSERT INTO cloudDiskOperationLog (
+        <include refid="allColumns"/>
+        ) VALUES (
+        #{operationTime},
+        #{operation},
+        #{userName},
+        #{userIp},
+        #{operationLevel}
+        )
+    </insert>
+
+    <!-- 删除所有数据 -->
+    <delete id="deleteAll">
+        DELETE FROM cloudDiskOperationLog
+    </delete>
+</mapper>

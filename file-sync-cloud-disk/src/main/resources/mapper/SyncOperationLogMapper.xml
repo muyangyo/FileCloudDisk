@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muyangyo.filesyncclouddisk.manager.mapper.SyncLogMapper">
+
+    <sql id="Base_Column_List">
+        id, operation_time, operation, target_file, operator, ip, level
+    </sql>
+
+    <insert id="insert" parameterType="com.muyangyo.filesyncclouddisk.common.model.meta.SyncOperationLog">
+        INSERT INTO syncOperationLog
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            operation_time,
+            operation,
+            <if test="targetFile != null">target_file,</if>
+            operator,
+            ip,
+            level
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            #{operationTime},
+            #{operation},
+            <if test="targetFile != null">#{targetFile},</if>
+            #{operator},
+            #{ip},
+            #{level}
+        </trim>
+    </insert>
+
+    <!-- 查询所有数据，分页 -->
+    <select id="selectAllWithLimit" resultType="com.muyangyo.filesyncclouddisk.common.model.meta.SyncOperationLog">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM syncOperationLog
+        ORDER BY operation_time DESC LIMIT #{start}, #{size}
+    </select>
+
+    <!-- 查询总数 -->
+    <select id="getTotalCount" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM syncOperationLog
+    </select>
+
+    <!-- 删除所有数据 -->
+    <delete id="deleteAll">
+        DELETE FROM syncOperationLog
+    </delete>
+
+    <!-- 动态多条件查询 -->
+    <select id="selectByCondition" resultType="com.muyangyo.filesyncclouddisk.common.model.meta.SyncOperationLog">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM syncOperationLog
+        <where>
+            <if test="operation != null and operation != ''">
+                AND operation = #{operation}
+            </if>
+            <if test="targetFile != null and targetFile != ''">
+                AND target_file LIKE CONCAT('%', #{targetFile}, '%')
+            </if>
+            <if test="operator != null and operator != ''">
+                AND operator = #{operator}
+            </if>
+            <if test="serverIp != null and serverIp != ''">
+                AND ip = #{ip}
+            </if>
+            <if test="level != null">
+                AND level = #{level}
+            </if>
+            <if test="operationTime != null">
+                AND operation_time >= #{operationTime}
+            </if>
+        </where>
+        ORDER BY operation_time DESC
+    </select>
+
+
+</mapper>

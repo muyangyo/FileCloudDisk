@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muyangyo.filesyncclouddisk.manager.mapper.SyncInfoMapper">
+
+    <sql id="Base_Column_List">
+        username, password, local_address, is_first, server_id, server_ip,is_active,last_sync_time
+    </sql>
+
+    <select id="selectByName" resultType="com.muyangyo.filesyncclouddisk.common.model.meta.SyncInfo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM syncInfo
+        WHERE username = #{username}
+    </select>
+
+    <select id="selectAll" resultType="com.muyangyo.filesyncclouddisk.common.model.meta.SyncInfo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM syncInfo
+    </select>
+
+    <select id="selectByCondition" resultType="com.muyangyo.filesyncclouddisk.common.model.meta.SyncInfo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM syncInfo
+        <where>
+            <if test="username != null and username != ''">
+                AND username = #{username}
+            </if>
+            <if test="password != null and password != ''">
+                AND password = #{password}
+            </if>
+            <if test="localAddress != null and localAddress != ''">
+                AND local_address = #{localAddress}
+            </if>
+            <if test="isFirst != null">
+                AND is_first = #{isFirst}
+            </if>
+            <if test="serverId != null and serverId != ''">
+                AND server_id = #{serverId}
+            </if>
+            <if test="serverIp != null and serverIp != ''">
+                AND server_ip = #{serverIp}
+            </if>
+            <if test="isActive != null">
+                AND is_active = #{isActive}
+            </if>
+            <if test="lastSyncTime != null">
+                AND last_sync_time = #{lastSyncTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="getCount" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM syncInfo
+    </select>
+
+    <select id="selectActive" resultType="com.muyangyo.filesyncclouddisk.common.model.meta.SyncInfo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM syncInfo
+        WHERE is_active = 1
+    </select>
+
+    <insert id="insert" parameterType="com.muyangyo.filesyncclouddisk.common.model.meta.SyncInfo">
+        INSERT INTO syncInfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            username,
+            password,
+            local_address,
+            <if test="isFirst != null">
+                is_first,
+            </if>
+            <if test="serverId != null and serverId != ''">
+                server_id,
+            </if>
+            <if test="serverIp != null and serverIp != ''">
+                server_ip,
+            </if>
+            <if test="isActive != null">
+                is_active,
+            </if>
+            <if test="lastSyncTime != null">
+                last_sync_time,
+            </if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            #{username},
+            #{password},
+            #{localAddress},
+            <if test="isFirst != null">
+                #{isFirst},
+            </if>
+            <if test="serverId != null and serverId != ''">
+                #{serverId},
+            </if>
+            <if test="serverIp != null and serverIp != ''">
+                #{serverIp},
+            </if>
+            <if test="isActive != null">
+                #{isActive},
+            </if>
+            <if test="lastSyncTime != null">
+                #{lastSyncTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByName" parameterType="com.muyangyo.filesyncclouddisk.common.model.meta.SyncInfo">
+        UPDATE syncInfo
+        <set>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="localAddress != null and localAddress != ''">
+                local_address = #{localAddress},
+            </if>
+            <if test="isFirst != null">
+                is_first = #{isFirst},
+            </if>
+            <if test="serverId != null and serverId != ''">
+                server_id = #{serverId},
+            </if>
+            <if test="serverIp != null">
+                server_ip = #{serverIp},
+            </if>
+            <if test="isActive != null">
+                is_active = #{isActive},
+            </if>
+            <if test="lastSyncTime != null">
+                last_sync_time = #{lastSyncTime},
+            </if>
+        </set>
+        WHERE username = #{username}
+    </update>
+
+    <update id="updateLastSyncTimeByName">
+        UPDATE syncInfo
+        SET last_sync_time = #{lastSyncTime}
+        WHERE username = #{username}
+    </update>
+
+    <delete id="deleteByName">
+        DELETE FROM syncInfo
+        WHERE username = #{username}
+    </delete>
+
+    <delete id="deleteAll">
+        DELETE FROM syncInfo
+    </delete>
+</mapper>

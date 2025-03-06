@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.muyangyo.filesyncclouddisk.user.mapper.UserMapper">
+
+
+    <sql id="allColumns">
+        user_id, username, password, create_time, last_login_time, account_status, permissions
+    </sql>
+
+    <!-- 根据主键查询用户信息 -->
+    <select id="selectByUserId" resultType="com.muyangyo.filesyncclouddisk.common.model.meta.User">
+        SELECT
+        <include refid="allColumns"/>
+        FROM user
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 根据用户名查询用户信息 -->
+    <select id="selectByUsername" resultType="com.muyangyo.filesyncclouddisk.common.model.meta.User">
+        SELECT
+        <include refid="allColumns"/>
+        FROM user
+        WHERE username = #{username}
+    </select>
+
+    <select id="numberOfUser" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM user
+    </select>
+
+    <!-- 根据动态条件查询用户信息 -->
+    <select id="selectByDynamicCondition" resultType="com.muyangyo.filesyncclouddisk.common.model.meta.User">
+        SELECT
+        <include refid="allColumns"/>
+        FROM user
+        <where>
+            <if test="userId != null and userId != ''">
+                AND user_id = #{userId}
+            </if>
+            <if test="username != null and username != ''">
+                AND username = #{username}
+            </if>
+            <if test="accountStatus != null and accountStatus != ''">
+                AND account_status = #{accountStatus}
+            </if>
+        </where>
+    </select>
+
+
+    <insert id="insertByDynamicCondition" parameterType="com.muyangyo.filesyncclouddisk.common.model.meta.User">
+        INSERT INTO user
+        <trim prefix="(" suffix=")" suffixOverrides="," prefixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="username != null">username,</if>
+            <if test="password != null">password,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="lastLoginTime != null">last_login_time,</if>
+            <if test="accountStatus != null">account_status,</if>
+            <if test="permissions != null">permissions,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides="," prefixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="username != null">#{username},</if>
+            <if test="password != null">#{password},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="lastLoginTime != null">#{lastLoginTime},</if>
+            <if test="accountStatus != null">#{accountStatus},</if>
+            <if test="permissions != null">#{permissions},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByUserId" parameterType="com.muyangyo.filesyncclouddisk.common.model.meta.User">
+        UPDATE user
+        <set>
+            <if test="username != null">username = #{username},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="lastLoginTime != null">last_login_time = #{lastLoginTime},</if>
+            <if test="accountStatus != null">account_status = #{accountStatus},</if>
+            <if test="permissions != null">permissions = #{permissions},</if>
+        </set>
+        WHERE user_id = #{userId}
+    </update>
+
+
+    <delete id="deleteByUserId" parameterType="String">
+        DELETE FROM user WHERE user_id = #{userId}
+    </delete>
+</mapper>

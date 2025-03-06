@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.muyangyo.filesyncclouddisk.manager.mapper.AdminMapper">
+
+    <sql id="allColumns">
+        user_id, username, password, create_time, last_login_time
+    </sql>
+
+    <select id="selectByUserId"
+            resultType="com.muyangyo.filesyncclouddisk.common.model.meta.Admin">
+        SELECT
+        <include refid="allColumns"/>
+        FROM admin
+        WHERE user_id = #{userId}
+    </select>
+
+
+    <select id="selectByUsername"
+            resultType="com.muyangyo.filesyncclouddisk.common.model.meta.Admin">
+        SELECT
+        <include refid="allColumns"/>
+        FROM admin
+        WHERE username = #{username}
+    </select>
+
+
+    <select id="selectByDynamicCondition"
+            resultType="com.muyangyo.filesyncclouddisk.common.model.meta.Admin">
+        SELECT
+        <include refid="allColumns"/>
+        FROM admin
+        <where>
+            <if test="userId != null and userId != ''">
+                AND user_id = #{userId}
+            </if>
+            <if test="username != null and username != ''">
+                AND username = #{username}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="lastLoginTime != null">
+                AND last_login_time = #{lastLoginTime}
+            </if>
+        </where>
+    </select>
+    <select id="numberOfAdmin" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM admin
+    </select>
+
+    <insert id="insertByDynamicCondition" parameterType="com.muyangyo.filesyncclouddisk.common.model.meta.Admin">
+        INSERT INTO admin
+        <trim prefix="(" suffix=")" prefixOverrides="," suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="username != null">username,</if>
+            <if test="password != null">password,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="lastLoginTime != null">last_login_time,</if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" prefixOverrides="," suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="username != null">#{username},</if>
+            <if test="password != null">#{password},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="lastLoginTime != null">#{lastLoginTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateByUserId" parameterType="com.muyangyo.filesyncclouddisk.common.model.meta.Admin">
+        UPDATE admin
+        <set>
+            <if test="username != null">username = #{username},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="lastLoginTime != null">last_login_time = #{lastLoginTime},</if>
+        </set>
+        WHERE user_id = #{userId}
+    </update>
+</mapper>

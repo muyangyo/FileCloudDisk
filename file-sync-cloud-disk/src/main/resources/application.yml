@@ -1,0 +1,56 @@
+spring:
+  devtools:
+    add-properties: false # 禁用默认的属性添加
+  application:
+    name: "文件同步云盘" # 项目名
+  # 设置横幅文件
+  banner:
+    location: banner.txt
+  # 数据相关配置
+  datasource:
+    url: jdbc:sqlite:./data/meta.db
+    username:
+    password:
+    driver-class-name: org.sqlite.JDBC
+    # 设置缓冲期，最大等待时间
+  lifecycle:
+    timeout-per-shutdown-phase: 60s
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+# 设置端口号
+server:
+  max-http-header-size: 8096 # 支持更长的 header
+  tomcat:
+    uri-encoding: utf-8
+    # 开启优雅停机，默认值：immediate 为立即关闭
+  shutdown: graceful
+
+logging:
+  # 日志分类打印等级
+  level:
+    org.apache.ftpserver: error
+    com.muyangyo.filesyncclouddisk.syncCore: info
+    root: info
+
+  # 日志持久化存储文件
+  file:
+    name: log/${spring.application.name}.log
+  # 日志分割
+  logback:
+    rollingpolicy:
+      file-name-pattern: ${LOG_FILE}.%d{yyyy-MM-dd}.%i.txt
+      max-file-size: 64KB # 单个日志文件大小
+      max-history: 30 # 日志文件保留天数
+      total-size-cap: 32MB # 日志文件总大小
+
+# myBatis
+mybatis:
+  #配置 mybatis xml 的文件路径，在 resources/mapper 所有的 **Mapper.xml  ⽂件
+  mapper-locations: classpath:mapper/**Mapper.xml
+
+  configuration:
+    #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 配置打印 MyBatis⽇志
+    map-underscore-to-camel-case: true # 配置驼峰自动转换
